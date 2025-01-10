@@ -20,7 +20,8 @@ export class PokeapiService {
                         "weight": pokemonData.weight,
                     },
                     "abilities": pokemonData.abilities.map(ability => ability.ability.name),
-                    "stats": this.formatStats(pokemonData.stats)
+                    "stats": this.formatStats(pokemonData.stats),
+                    "evolution": await this.getEvolutionChain(pokemonData.id)
                 }
             };
             return formattedData;
@@ -35,5 +36,35 @@ export class PokeapiService {
             statMap[stat.stat.name] = stat.base_stat.toString();
         });
         return statMap;
+    }
+
+    private async getEvolutionChain(pokemonId: number) {
+        try {
+            //getting the species first to get the evolution chain
+            const speciesResponse = await axios.get(`${this.apiUrl}/pokemon-species/${pokemonId}`);
+            const evolutionChainUrl = speciesResponse.data.evolution_chain.url;
+
+            //get the evolution chain
+            const evolutionResponse = await axios.get(evolutionChainUrl);
+            const chain = evolutionResponse.data.chain;
+
+            //evolution names
+            const evolutionNames = this.extractEvolutions(chain);
+            return evolutionNames;
+        } catch (error) {
+            return [];
+        }
+    }
+
+    private extractEvolutions(chain) {
+        const evolutions = [];
+        let currentChain = chain;
+
+        while (currentChain) {
+            evolutions.push(currentChain.species.name);
+            currentChain = currentChain.evolves_to[0]; //get next evolution
+        }
+
+        return evolutions;
     }
 }
