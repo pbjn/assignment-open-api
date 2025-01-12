@@ -46,13 +46,11 @@ export class PokeapiService {
                     "Battle Insights": {
                         "Base Stats": this.formatStats(pokemonData.stats),
                         "Weaknesses": this.getWeaknesses(pokemonData.types),
-                        "Tip": `Carefully analyze your Pokémon's base stats to develop strategies tailored to its strengths and weaknesses. A well-informed trainer can turn any battle in their favor!`
+                        "Tip": "Carefully analyze your Pokémon's base stats to develop strategies based on its strengths and weaknesses. A well-informed trainer can turn any battle in their favor!"
                     },
                     "Evolution Guide": {
                         "Evolution Chain": await this.getEvolutionChain(pokemonData.id),
-                        "Fun Fact": pokemonData.name === "pikachu"
-                            ? "Did you know? Pikachu evolves into Raichu with a Thunder Stone!"
-                            : "Keep training to see the next evolution!"
+                        "Message": "Keep training to see the next evolution!"
                     },
                     "Trainer's Note": "Keep training and building your bond with this Pokémon to unlock its full potential!"
                 }
